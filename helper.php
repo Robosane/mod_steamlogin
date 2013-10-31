@@ -40,35 +40,46 @@ abstract class modSteamLoginHelper
         }
         if (!$url)
         {
-            // Stay on the same page
-            $uri = clone JUri::getInstance();
-            $vars = $router->parse($uri);
-            unset($vars['lang']);
-            if ($router->getMode() == JROUTER_MODE_SEF)
+            $url = self::getCurrentUrl();
+        }
+
+        return $url;
+    }
+
+    public static function getCurrentUrl()
+    {
+        $url = null;
+
+        // Stay on the same page
+        $uri = clone JUri::getInstance();
+        $app    = JFactory::getApplication();
+        $router = $app->getRouter();
+        $vars = $router->parse($uri);
+        unset($vars['lang']);
+        if ($router->getMode() == JROUTER_MODE_SEF)
+        {
+            if (isset($vars['Itemid']))
             {
-                if (isset($vars['Itemid']))
+                $itemid = $vars['Itemid'];
+                $menu = $app->getMenu();
+                $item = $menu->getItem($itemid);
+                unset($vars['Itemid']);
+                if (isset($item) && $vars == $item->query)
                 {
-                    $itemid = $vars['Itemid'];
-                    $menu = $app->getMenu();
-                    $item = $menu->getItem($itemid);
-                    unset($vars['Itemid']);
-                    if (isset($item) && $vars == $item->query)
-                    {
-                        $url = 'index.php?Itemid='.$itemid;
-                    }
-                    else {
-                        $url = 'index.php?'.JUri::buildQuery($vars).'&Itemid='.$itemid;
-                    }
+                    $url = 'index.php?Itemid='.$itemid;
                 }
-                else
-                {
-                    $url = 'index.php?'.JUri::buildQuery($vars);
+                else {
+                    $url = 'index.php?'.JUri::buildQuery($vars).'&Itemid='.$itemid;
                 }
             }
             else
             {
                 $url = 'index.php?'.JUri::buildQuery($vars);
             }
+        }
+        else
+        {
+            $url = 'index.php?'.JUri::buildQuery($vars);
         }
 
         return $url;
@@ -80,7 +91,7 @@ abstract class modSteamLoginHelper
         return (!$user->get('guest')) ? 'logout' : 'login';
     }
 
-    public static function getForm($return_url)
+    public static function getForm($params)
     {
         $path = ini_get('include_path');
         $path_extra = JPATH_LIBRARIES.'/openid/';
@@ -99,9 +110,10 @@ abstract class modSteamLoginHelper
 
         // Generate form markup and render it.
         $form_id = 'openid_message';
-        $form_html = $auth_request->formMarkup(JUri::root(), JRoute::_($return_url, true, -1),
+        $form_html = $auth_request->formMarkup(JUri::root(), JRoute::_(self::getCurrentUrl(), true, -1),
                                                 false, array('id' => $form_id));
-        $form_html = str_replace('type="submit"', 'type="image" src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_small.png" alt="Steam Login"',$form_html);
+        $image_src = JURI::root() . 'media/mod_steamlogin/images/' . $params->get('btn_image_src', 'sits_small.png');
+        $form_html = str_replace('type="submit"', 'type="image" src="' . $image_src . '" alt="Steam Login"',$form_html);
         return $form_html;
     }
 }

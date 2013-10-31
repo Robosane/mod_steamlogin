@@ -8,7 +8,7 @@
     <copyright>(C) 2013 DZ Creative Studio. All rights reserved.</copyright>
     <version>1.0.0</version>
     <description>MOD_STEAMLOGIN_DESC</description>
-    
+
     <files>
         <filename>mod_steamlogin.xml</filename>
         <filename module="mod_steamlogin">mod_steamlogin.php</filename>
@@ -16,17 +16,50 @@
         <filename>helper.php</filename>
         <folder>tmpl</folder>
     </files>
-    
+
     <languages>
         <!-- Any language files included with the module -->
         <language tag="en-GB">en-GB.mod_steamlogin.ini</language>
         <language tag="en-GB">en-GB.mod_steamlogin.sys.ini</language>
     </languages>
-    
+
+    <media folder="media" destination="mod_steamlogin">
+        <folder>images</folder>
+        <filename>index.html</filename>
+    </media>
+
     <!-- Optional parameters -->
     <config>
         <fields name="params">
             <fieldset name="basic">
+                <field
+                    name="btn_image_src" type="list"
+                    label="MOD_STEAMLOGIN_LBL_BTN_SIZE"
+                    description="MOD_STEAMLOGIN_DESC_BTN_SIZE">
+                    <option value="sits_small.png">MOD_STEAMLOGIN_OPTION_BTN_SMALL</option>
+                    <option value="sits_large_noborder.png">MOD_STEAMLOGIN_OPTION_BTN_LARGE</option>
+                    <option value="sits_large_border.png">MOD_STEAMLOGIN_OPTION_BTN_BORDERED_LARGE</option>
+                </field>
+
+                <field type="spacer" />
+                <field
+                    name="login"
+                    type="menuitem"
+                    disable="separator"
+                    label="MOD_LOGIN_FIELD_LOGIN_REDIRECTURL_LABEL"
+                    description="MOD_LOGIN_FIELD_LOGIN_REDIRECTURL_DESC" >
+                    <option
+                        value="">JDEFAULT</option>
+                </field>
+                <field
+                    name="logout"
+                    type="menuitem"
+                    disable="separator"
+                    label="MOD_LOGIN_FIELD_LOGOUT_REDIRECTURL_LABEL"
+                    description="MOD_LOGIN_FIELD_LOGOUT_REDIRECTURL_DESC" >
+                    <option
+                        value="">JDEFAULT</option>
+                </field>
             </fieldset>
             <fieldset name="advanced">
                 <field name="layout" type="modulelayout"

@@ -17,7 +17,7 @@ $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 
 $type   = ModSteamLoginHelper::getType();
 $return = ModSteamLoginHelper::getReturnURL($params, $type);
-$form = ModSteamLoginHelper::getForm($return);
+$form   = ModSteamLoginHelper::getForm($params);
 $user   = JFactory::getUser();
 $layout = $params->get('layout', 'default');
 
@@ -27,9 +27,10 @@ if (!$user->guest) {
 } else {
     if (JRequest::getVar('janrain_nonce')) {
         $credentials = $_GET;
-        $credentials['password'] = '';
 
         JFactory::getApplication()->login($_GET, array('autoregister' => true));
+        usleep(300); // Make sure the login session is complete before redirect
+        JFactory::getApplication()->redirect(JRoute::_($return));
     }
 }
 
