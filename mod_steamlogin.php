@@ -11,8 +11,12 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 // Include the syndicate functions only once
-require_once __DIR__ . '/helper.php';
-
+try {
+    require_once __DIR__ . '/helper.php';
+} catch(Exception $e) {
+    echo $e->getMessage();
+    return;
+}
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 
 $type   = ModSteamLoginHelper::getType();
