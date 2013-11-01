@@ -21,7 +21,7 @@ try {
     $return = ModSteamLoginHelper::getReturnURL($params, $type);
     $form   = ModSteamLoginHelper::getForm($params);
 } catch(Exception $e) {
-    echo $e->getMessage();
+    require JModuleHelper::getLayoutPath('mod_steamlogin', 'default_error');
     return;
 }
 $user   = JFactory::getUser();
