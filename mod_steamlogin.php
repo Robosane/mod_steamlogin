@@ -10,18 +10,20 @@
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-// Include the syndicate functions only once
+
 try {
+    // Include the syndicate functions only once
     require_once __DIR__ . '/helper.php';
+
+    $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+
+    $type   = ModSteamLoginHelper::getType();
+    $return = ModSteamLoginHelper::getReturnURL($params, $type);
+    $form   = ModSteamLoginHelper::getForm($params);
 } catch(Exception $e) {
     echo $e->getMessage();
     return;
 }
-$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-
-$type   = ModSteamLoginHelper::getType();
-$return = ModSteamLoginHelper::getReturnURL($params, $type);
-$form   = ModSteamLoginHelper::getForm($params);
 $user   = JFactory::getUser();
 $layout = $params->get('layout', 'default');
 

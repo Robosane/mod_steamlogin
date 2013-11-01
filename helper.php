@@ -112,6 +112,9 @@ abstract class modSteamLoginHelper
 
         $auth_request = $consumer->begin($identifier);
 
+        if (!$auth_request) {
+            throw new RuntimeException(JText::_('MOD_STEAMLOGIN_EXCEPTION_DISCOVER_FAILED'));
+        }
         // Generate form markup and render it.
         $form_id = 'openid_message';
         $form_html = $auth_request->formMarkup(JUri::root(), JRoute::_(self::getCurrentUrl(), true, -1),
