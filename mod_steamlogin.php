@@ -17,15 +17,19 @@ try {
 
     $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 
-    $type   = ModSteamLoginHelper::getType();
-    $return = ModSteamLoginHelper::getReturnURL($params, $type);
-    $form   = ModSteamLoginHelper::getForm($params);
+    if (JRequest::getVar("try_auth")) {
+        $form   = ModSteamLoginHelper::getForm($params);
+        require JModuleHelper::getLayoutPath('mod_steamlogin', 'default_form');
+        return;
+    }
 } catch(Exception $e) {
     require JModuleHelper::getLayoutPath('mod_steamlogin', 'default_error');
     return;
 }
 $user   = JFactory::getUser();
 $layout = $params->get('layout', 'default');
+$type   = ModSteamLoginHelper::getType();
+$return = ModSteamLoginHelper::getReturnURL($params, $type);
 
 // Logged users must load the logout sublayout
 if (!$user->guest) {
@@ -36,6 +40,8 @@ if (!$user->guest) {
 
         JFactory::getApplication()->login($_GET, array('autoregister' => true));
         usleep(300); // Make sure the login session is complete before redirect
+
+
         JFactory::getApplication()->redirect(JRoute::_($return));
     }
 }

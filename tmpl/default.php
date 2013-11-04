@@ -9,7 +9,33 @@
 
 // no direct access
 defined('_JEXEC') or die;
+$image_src = JURI::root() . 'media/mod_steamlogin/images/' . $params->get('btn_image_src', 'sits_small.png');
 ?>
-<div class="steamlogin-module<?php echo $moduleclass_sfx; ?>">
-    <?php echo $form; ?>
+<div id="steamlogin" class="steamlogin-module<?php echo $moduleclass_sfx; ?>">
+    <form id="steamlogin_form" method="POST">
+        <input type="hidden" name="try_auth" value="1"/>
+        <input type="image" src="<?php echo $image_src; ?>" />
+    </form>
+    <div class="loader" style="display: none;">
+        <img src="<?php echo JUri::root().'media/system/images/modal/spinner.gif'; ?>" />
+        <?php echo JText::_('MOD_STEAMLOGIN_OPENID_TRANSACTION_IN_PROGRESS'); ?>
+    </div>
 </div>
+<script type="text/javascript">
+    jQuery('#steamlogin_form').on('submit', function() {
+        jQuery(this).hide();
+        jQuery("#steamlogin > .loader").show();
+
+        jQuery.ajax({
+            type: "POST",
+            data: jQuery(this).serialize(),
+            success: function(data) {
+                var module = jQuery("#steamlogin", jQuery(data));
+                jQuery("#steamlogin").replaceWith(module);
+                jQuery("#openid_message", module).submit();
+            }
+        })
+
+        return false;
+    });
+</script>

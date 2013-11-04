@@ -120,7 +120,7 @@ abstract class modSteamLoginHelper
         $form_html = $auth_request->formMarkup(JUri::root(), JRoute::_(self::getCurrentUrl(), true, -1),
                                                 false, array('id' => $form_id));
         $image_src = JURI::root() . 'media/mod_steamlogin/images/' . $params->get('btn_image_src', 'sits_small.png');
-        $form_html = str_replace('type="submit"', 'type="image" src="' . $image_src . '" alt="Steam Login"',$form_html);
+        $form_html = str_replace('<input type="submit" value="Continue" />', '',$form_html);
         return $form_html;
     }
 }

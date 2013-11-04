@@ -11,7 +11,10 @@
 defined('_JEXEC') or die;
 ?>
 <div id="steamlogin" class="steamlogin-module<?php echo $moduleclass_sfx; ?>">
-    <div class="alert alert-error">
-        <?php echo $e->getMessage(); ?>
-    </div>
+    <img src="<?php echo JUri::root().'media/system/images/modal/spinner.gif'; ?>" />
+    <?php echo JText::_('MOD_STEAMLOGIN_OPENID_TRANSACTION_IN_PROGRESS'); ?>
+    <?php echo $form; ?>
+    <script type="text/javascript">
+    document.getElementById("openid_message").submit();
+    </script>
 </div>
