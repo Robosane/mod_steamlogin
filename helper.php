@@ -15,9 +15,9 @@ $path_extra = JPATH_LIBRARIES.'/openid/';
 $path = $path_extra . PATH_SEPARATOR . $path;
 ini_set('include_path', $path);
 
-if (file_exists(JPATH_LIBRARIES.'/openid')) {
-    require_once JPATH_LIBRARIES.'/openid/Auth/OpenID/Consumer.php';
-    require_once JPATH_LIBRARIES.'/openid/Auth/OpenID/FileStore.php';
+if (file_exists($path_extra)) {
+    require_once 'Auth/OpenID/Consumer.php';
+    require_once 'Auth/OpenID/JDatabaseStore.php';
 } else {
     throw new RuntimeException(JText::_('MOD_STEAMLOGIN_EXCEPTION_LIB_NOT_INSTALLED'));
 }
@@ -106,8 +106,9 @@ abstract class modSteamLoginHelper
     public static function getForm($params)
     {
         $identifier = 'http://steamcommunity.com/openid';
-        $store_path = '/tmp';
-        $store = new Auth_OpenID_FileStore($store_path);
+
+        $store = new Auth_OpenID_JDatabaseStore();
+        $store->createTables();
         $consumer = new Auth_OpenID_Consumer($store);
 
         $auth_request = $consumer->begin($identifier);
