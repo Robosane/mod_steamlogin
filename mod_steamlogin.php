@@ -38,11 +38,18 @@ if (!$user->guest) {
     if (JRequest::getVar('janrain_nonce')) {
         $credentials = $_GET;
 
-        JFactory::getApplication()->login($_GET, array('autoregister' => true));
+        $result = JFactory::getApplication()->login($_GET, array('autoregister' => true));
         usleep(300); // Make sure the login session is complete before redirect
 
+        $session = &JFactory::getSession();
+        if ($result && $session->get('user.first_connect', false)) {
+            $session->clear('user.first_connect');
+            JFactory::getApplication()->enqueueMessage(JText::_('MOD_STEAMLOGIN_FIRST_LOGIN_MESSAGE'), 'notice');
+            JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_users&view=profile&layout=edit'));
+        } else {
+            JFactory::getApplication()->redirect(JRoute::_($return));
+        }
 
-        JFactory::getApplication()->redirect(JRoute::_($return));
     }
 }
 
