@@ -10,18 +10,6 @@
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-$path = ini_get('include_path');
-$path_extra = JPATH_LIBRARIES.'/openid/';
-$path = $path_extra . PATH_SEPARATOR . $path;
-ini_set('include_path', $path);
-
-if (file_exists($path_extra)) {
-    require_once 'Auth/OpenID/Consumer.php';
-    require_once 'Auth/OpenID/JDatabaseStore.php';
-} else {
-    throw new RuntimeException(JText::_('MOD_STEAMLOGIN_EXCEPTION_LIB_NOT_INSTALLED'));
-}
-
 abstract class modSteamLoginHelper
 {
     public static function getReturnURL($params, $type)
@@ -101,27 +89,5 @@ abstract class modSteamLoginHelper
     {
         $user = JFactory::getUser();
         return (!$user->get('guest')) ? 'logout' : 'login';
-    }
-
-    public static function getForm($params)
-    {
-        $identifier = 'http://steamcommunity.com/openid';
-
-        $store = new Auth_OpenID_JDatabaseStore();
-        $store->createTables();
-        $consumer = new Auth_OpenID_Consumer($store);
-
-        $auth_request = $consumer->begin($identifier);
-
-        if (!$auth_request) {
-            throw new RuntimeException(JText::_('MOD_STEAMLOGIN_EXCEPTION_DISCOVER_FAILED'));
-        }
-        // Generate form markup and render it.
-        $form_id = 'openid_message';
-        $form_html = $auth_request->formMarkup(JUri::root(), JRoute::_(self::getCurrentUrl(), true, -1),
-                                                false, array('id' => $form_id));
-        $image_src = JURI::root() . 'media/mod_steamlogin/images/' . $params->get('btn_image_src', 'sits_small.png');
-        $form_html = str_replace('<input type="submit" value="Continue" />', '',$form_html);
-        return $form_html;
     }
 }

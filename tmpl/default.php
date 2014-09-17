@@ -10,11 +10,13 @@
 // no direct access
 defined('_JEXEC') or die;
 $image_src = JURI::root() . 'media/mod_steamlogin/images/' . $params->get('btn_image_src', 'sits_small.png');
+JHtml::_('jquery.framework');
 ?>
 <div id="steamlogin" class="steamlogin-module<?php echo $moduleclass_sfx; ?>">
-    <form id="steamlogin_form" method="POST">
+    <form id="steamlogin_form" method="POST" action="<?= JRoute::_('index.php?option=com_steamid&view=login')?>">
         <input type="hidden" name="try_auth" value="1"/>
         <input type="image" src="<?php echo $image_src; ?>" />
+        <input type="hidden" name="return" value="<?= base64_encode(JRoute::_($return, true, -1)); ?>" />
     </form>
     <div class="loader" style="display: none;">
         <img src="<?php echo JUri::root().'media/system/images/modal/spinner.gif'; ?>" />
@@ -28,6 +30,7 @@ $image_src = JURI::root() . 'media/mod_steamlogin/images/' . $params->get('btn_i
 
         jQuery.ajax({
             type: "POST",
+            url: this.action,
             data: jQuery(this).serialize(),
             success: function(data) {
                 var module = jQuery("#steamlogin", jQuery(data));
