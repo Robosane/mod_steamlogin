@@ -22,5 +22,12 @@ if (!$user->guest) {
     $layout .= '_logout';
 }
 
+// Do not display module if already in view login
+$view = JRequest::getCmd('view');
+$option = JRequest::getCmd('option');
+if ($view == 'login' && ($option == 'com_users' || $option == 'com_steamid')) {
+    return;
+}
+
 // Display template
 require JModuleHelper::getLayoutPath('mod_steamlogin',$layout);
