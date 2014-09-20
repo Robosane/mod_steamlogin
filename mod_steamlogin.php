@@ -19,6 +19,14 @@ $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 
 // Logged users must load the logout sublayout
 if (!$user->guest) {
+    // Profile link
+    $profile_query = 'index.php?option=com_users&view=profile';
+    $profile_item = JFactory::getApplication()->getMenu()->getItems('link', $profile_query, true);
+    if ($profile_item) {
+        $profile_url = JRoute::_('index.php?Itemid=' . $profile_item->id);
+    } else {
+        $profile_url = JRoute::_($profile_query);
+    }
     $layout .= '_logout';
 }
 

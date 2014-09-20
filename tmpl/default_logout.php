@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 ?>
 <div class="steamlogin-module<?php echo $moduleclass_sfx; ?>">
     <h4><?php echo $user->name; ?></h4>
-    <a href="<?php echo JRoute::_('index.php?option=com_users&view=profile'); ?>">
+    <a href="<?= $profile_url; ?>">
         <?php echo JText::_('MOD_STEAMLOGIN_YOUR_PROFILE'); ?>
     </a>
 
